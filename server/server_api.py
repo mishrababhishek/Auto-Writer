@@ -39,7 +39,7 @@ class BaseServer:
         self._exec_router = APIRouter(prefix="/execute")
         self._health_router = APIRouter(prefix="/health")
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self._templates = Jinja2Templates(directory=os.path.join(current_dir, "templates"))
+        self._templates = Jinja2Templates(directory=os.path.join(current_dir, "public"))
         self._log_box_signal = log_box_signal
         self._setup_routes()
         self._app.include_router(self._exec_router)

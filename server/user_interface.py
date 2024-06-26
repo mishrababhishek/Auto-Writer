@@ -17,6 +17,7 @@ class UserInterface(tk.Tk):
         self._server_state = UserInterface.SERVER_STATE_NOT_RUNNING
         
         self.title("Auto Writer Server")
+        self.iconbitmap(r"public/icon.ico")
         self.geometry("800x400")
         
         self.style = ttk.Style(self)
