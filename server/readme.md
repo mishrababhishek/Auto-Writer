@@ -1,8 +1,12 @@
+<center>
+
 # 🚀 Auto Writer Server
 
 ![Python Version](https://img.shields.io/badge/python-3.12.4-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)
-![License](https://img.shields.io/badge/license-MIT-orange.svg)
+
+
+</center>
 
 Auto Writer Server is a powerful backend component of the Auto Writer application, designed to handle text writing automation with customizable typing speeds and remote control capabilities.
 
