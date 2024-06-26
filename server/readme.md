@@ -2,7 +2,7 @@
 
 # 🚀 Auto Writer Server
 
-![Python Version](https://img.shields.io/badge/python-3.12.4-blue.svg)
+![Python](https://img.shields.io/badge/python-3.12.4-blue.svg)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)
 
 
