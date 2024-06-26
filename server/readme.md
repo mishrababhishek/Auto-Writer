@@ -1,4 +1,4 @@
-<center>
+<div align="center">
 
 # 🚀 Auto Writer Server
 
@@ -6,7 +6,7 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)
 
 
-</center>
+</div>
 
 Auto Writer Server is a powerful backend component of the Auto Writer application, designed to handle text writing automation with customizable typing speeds and remote control capabilities.
 
