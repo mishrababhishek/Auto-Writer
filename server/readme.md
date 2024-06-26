@@ -65,14 +65,6 @@ The server comes with a sleek Tkinter-based GUI for easy management:
 
 Ensure that the server is run in a secure environment, as it has the capability to control keyboard input.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgements
 
 - [FastAPI](https://fastapi.tiangolo.com/)
