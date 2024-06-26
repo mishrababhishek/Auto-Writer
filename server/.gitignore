@@ -1,0 +1,22 @@
+# Virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# VS Code
+.vscode/
+
+# Misc
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
