@@ -12,91 +12,110 @@
             --text-color: #ffffff;
             --secondary-color: #61dafb;
             --sidebar-width: 250px;
+            --collapsed-sidebar-width: 60px;
+            --font-main: 'Roboto', sans-serif;
+            --font-code: 'Fira Code', monospace;
         }
 
         html {
             scroll-behavior: smooth;
         }
 
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1e1e1e;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #3f3f3f;
-            border-radius: 10px;
-            border: 3px solid #1e1e1e;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4f4f4f;
-        }
-
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #3f3f3f #1e1e1e;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--font-main);
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--background-color);
             margin: 0;
-            padding: 0;
             display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
         }
 
         .sidebar {
             width: var(--sidebar-width);
-            height: 100vh;
-            overflow-y: auto;
             background-color: #282c34;
             padding: 20px;
             position: fixed;
-            left: 0;
             top: 0;
             bottom: 0;
+            overflow-y: auto;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .sidebar.collapsed {
+            width: var(--collapsed-sidebar-width);
+            padding: 10px;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 20px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .sidebar.collapsed h2 {
+            display: none;
         }
 
         .content {
-            margin-left: calc(30px + var(--sidebar-width));
+            margin-left: var(--sidebar-width);
             padding: 20px;
             flex-grow: 1;
-            width: calc(100% - 30px - var(--sidebar-width));
+            width: calc(100% - var(--sidebar-width));
             box-sizing: border-box;
+            transition: margin-left 0.3s ease-in-out;
         }
 
-        h1,
-        h2,
-        h3 {
+        .collapsed + .content {
+            margin-left: var(--collapsed-sidebar-width);
+            width: calc(100% - var(--collapsed-sidebar-width));
+        }
+
+        .toggle-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button:hover {
+            background-color: #ff7357;
+        }
+
+        h1, h2, h3 {
             color: var(--primary-color);
         }
 
         .file-name {
             font-size: 1.2em;
             font-weight: bold;
-            margin-top: 20px;
+            margin: 20px 0;
             color: var(--secondary-color);
         }
 
         .function-list {
             list-style-type: none;
-            padding-left: 10px;
+            padding-left: 0;
         }
 
         .function-list li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .function-list a {
             color: var(--text-color);
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         .function-list a:hover {
@@ -105,9 +124,15 @@
 
         .function-details {
             background-color: #282c34;
-            border-radius: 5px;
+            border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .function-details:hover {
+            transform: translateY(-5px);
         }
 
         code {
@@ -115,7 +140,7 @@
             color: var(--secondary-color);
             padding: 2px 5px;
             border-radius: 3px;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: var(--font-code);
         }
 
         .api-test-button {
@@ -126,286 +151,231 @@
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
+            transition: background-color 0.3s;
         }
 
         .api-test-button:hover {
             background-color: #ff7357;
         }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .function-list li {
+                margin-bottom: 5px;
+            }
+
+            .function-list a {
+                font-size: 0.9em;
+            }
+        }
     </style>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            var content = document.querySelector('.content');
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+    </script>
 </head>
 
 <body>
-    <div class="sidebar">
-        <h2>Auto Writer</h2>
-        <div class="file-name">main.py</div>
-        <ul class="function-list">
-            <li><a href="#main-get_local_ip">get_local_ip()</a></li>
-            <li><a href="#main-start_server">start_server()</a></li>
-            <li><a href="#main-stop_server">stop_server()</a></li>
-            <li><a href="#main-handle_start_stop">handle_start_stop(start)</a></li>
-            <li><a href="#main-run_asyncio_loop">run_asyncio_loop()</a></li>
-            <li><a href="#main-shutdown">shutdown(loop)</a></li>
-            <li><a href="#main-on_closing">on_closing(loop)</a></li>
-            <li><a href="#main-log">log(message, error=False)</a></li>
-            <li><a href="#main-set_server_state">set_server_state(state)</a></li>
-            <li><a href="#main-main">main()</a></li>
-        </ul>
+    <div class="container">
+        <div class="sidebar">
+            <div class="toggle-button" onclick="toggleSidebar()">☰</div>
+            <h2>Auto Writer</h2>
+            <div class="file-name">main.py</div>
+            <ul class="function-list">
+                <li><a href="#main-get_local_ip">get_local_ip()</a></li>
+                <li><a href="#main-start_server">start_server()</a></li>
+                <li><a href="#main-stop_server">stop_server()</a></li>
+                <li><a href="#main-handle_start_stop">handle_start_stop(start)</a></li>
+                <li><a href="#main-run_asyncio_loop">run_asyncio_loop()</a></li>
+                <li><a href="#main-shutdown">shutdown(loop)</a></li>
+                <li><a href="#main-on_closing">on_closing(loop)</a></li>
+                <li><a href="#main-log">log(message, error=False)</a></li>
+                <li><a href="#main-set_server_state">set_server_state(state)</a></li>
+                <li><a href="#main-main">main()</a></li>
+            </ul>
 
-        <div class="file-name">server_api.py</div>
-        <ul class="function-list">
-            <li><a href="#server-ServerThread">ServerThread</a></li>
-            <li><a href="#server-EventRequest">EventRequest</a></li>
-            <li><a href="#server-BaseServer">BaseServer</a></li>
-            <li><a href="#server-EventsApi">EventsApi</a></li>
-            <li><a href="#server-Server">Server</a></li>
-        </ul>
+            <div class="file-name">server_api.py</div>
+            <ul class="function-list">
+                <li><a href="#server-ServerThread">ServerThread</a></li>
+                <li><a href="#server-EventRequest">EventRequest</a></li>
+                <li><a href="#server-BaseServer">BaseServer</a></li>
+                <li><a href="#server-EventsApi">EventsApi</a></li>
+                <li><a href="#server-Server">Server</a></li>
+            </ul>
 
-        <div class="file-name">signals.py</div>
-        <ul class="function-list">
-            <li><a href="#signals-Signals">Signals</a></li>
-        </ul>
+            <div class="file-name">signals.py</div>
+            <ul class="function-list">
+                <li><a href="#signals-Signals">Signals</a></li>
+            </ul>
 
-        <div class="file-name">user_interface.py</div>
-        <ul class="function-list">
-            <li><a href="#ui-UserInterface">UserInterface</a></li>
-        </ul>
+            <div class="file-name">user_interface.py</div>
+            <ul class="function-list">
+                <li><a href="#ui-UserInterface">UserInterface</a></li>
+            </ul>
 
-        <div class="file-name">writer.py</div>
-        <ul class="function-list">
-            <li><a href="#writer-Writer">Writer</a></li>
-        </ul>
+            <div class="file-name">writer.py</div>
+            <ul class="function-list">
+                <li><a href="#writer-Writer">Writer</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h1>Auto Writer Documentation</h1>
+
+            <h2>Packages Used</h2>
+            <ul>
+                <li><code>asyncio</code>: For asynchronous programming</li>
+                <li><code>socket</code>: For network operations</li>
+                <li><code>os</code>: For operating system related operations</li>
+                <li><code>uvicorn</code>: ASGI server for running FastAPI</li>
+                <li><code>fastapi</code>: Web framework for building APIs</li>
+                <li><code>pydantic</code>: Data validation and settings management</li>
+                <li><code>tkinter</code>: For creating the graphical user interface</li>
+                <li><code>pyautogui</code>: For simulating keyboard input</li>
+            </ul>
+
+            <h2>main.py</h2>
+
+            <div id="main-get_local_ip" class="function-details">
+                <h3>get_local_ip()</h3>
+                <p>Retrieves the local IP address of the machine.</p>
+                <p><strong>Returns:</strong> A string representing the local IP address, or an exception if an error occurs.</p>
+            </div>
+
+            <div id="main-start_server" class="function-details">
+                <h3>start_server()</h3>
+                <p>Asynchronous function to start the server.</p>
+                <p>This function initializes the server, updates the UI state, and logs relevant information.</p>
+            </div>
+
+            <div id="main-stop_server" class="function-details">
+                <h3>stop_server()</h3>
+                <p>Asynchronous function to stop the server.</p>
+                <p>This function stops the server, updates the UI state, and logs relevant information.</p>
+            </div>
+
+            <div id="main-handle_start_stop" class="function-details">
+                <h3>handle_start_stop(start)</h3>
+                <p>Handles the start and stop operations for the server based on the boolean parameter.</p>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>start</code>: Boolean indicating whether to start or stop the server.</li>
+                </ul>
+            </div>
+
+            <div id="main-run_asyncio_loop" class="function-details">
+                <h3>run_asyncio_loop()</h3>
+                <p>Runs the asyncio event loop in a separate thread.</p>
+            </div>
+
+            <div id="main-shutdown" class="function-details">
+                <h3>shutdown(loop)</h3>
+                <p>Shuts down the asyncio event loop gracefully.</p>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>loop</code>: The asyncio event loop to be shut down.</li>
+                </ul>
+            </div>
+
+            <div id="main-on_closing" class="function-details">
+                <h3>on_closing(loop)</h3>
+                <p>Handles the UI closing event.</p>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>loop</code>: The asyncio event loop to be closed.</li>
+                </ul>
+            </div>
+
+            <div id="main-log" class="function-details">
+                <h3>log(message, error=False)</h3>
+                <p>Logs messages to the console and UI.</p>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>message</code>: The message to log.</li>
+                    <li><code>error</code>: Boolean indicating if the message is an error message (default: False).</li>
+                </ul>
+            </div>
+
+            <div id="main-set_server_state" class="function-details">
+                <h3>set_server_state(state)</h3>
+                <p>Sets the server state in the UI.</p>
+                <p><strong>Parameters:</strong></p>
+                <ul>
+                    <li><code>state</code>: A string representing the new state of the server.</li>
+                </ul>
+            </div>
+
+            <div id="main-main" class="function-details">
+                <h3>main()</h3>
+                <p>The main entry point of the application.</p>
+                <p>This function initializes the UI, starts the event loop, and sets up signal handlers.</p>
+            </div>
+
+            <h2>server_api.py</h2>
+
+            <div id="server-ServerThread" class="function-details">
+                <h3>ServerThread</h3>
+                <p>Thread class to run the server in a separate thread.</p>
+            </div>
+
+            <div id="server-EventRequest" class="function-details">
+                <h3>EventRequest</h3>
+                <p>Pydantic model for validating event request data.</p>
+            </div>
+
+            <div id="server-BaseServer" class="function-details">
+                <h3>BaseServer</h3>
+                <p>Base class for the server providing common functionality.</p>
+            </div>
+
+            <div id="server-EventsApi" class="function-details">
+                <h3>EventsApi</h3>
+                <p>API class to handle event-related requests.</p>
+            </div>
+
+            <div id="server-Server" class="function-details">
+                <h3>Server</h3>
+                <p>Main server class for handling requests and managing server state.</p>
+            </div>
+
+            <h2>signals.py</h2>
+
+            <div id="signals-Signals" class="function-details">
+                <h3>Signals</h3>
+                <p>Class to handle custom signals for inter-thread communication.</p>
+            </div>
+
+            <h2>user_interface.py</h2>
+
+            <div id="ui-UserInterface" class="function-details">
+                <h3>UserInterface</h3>
+                <p>Class to manage the graphical user interface using Tkinter.</p>
+            </div>
+
+            <h2>writer.py</h2>
+
+            <div id="writer-Writer" class="function-details">
+                <h3>Writer</h3>
+                <p>Class to handle writing operations using pyautogui.</p>
+            </div>
+
+            <a class="api-test-button" href="http://localhost:8000/docs" target="_blank">Test API</a>
+        </div>
     </div>
-
-    <div class="content">
-        <h1>Auto Writer Documentation</h1>
-
-        <h2>Packages Used</h2>
-        <ul>
-            <li><code>asyncio</code>: For asynchronous programming</li>
-            <li><code>socket</code>: For network operations</li>
-            <li><code>os</code>: For operating system related operations</li>
-            <li><code>uvicorn</code>: ASGI server for running FastAPI</li>
-            <li><code>fastapi</code>: Web framework for building APIs</li>
-            <li><code>pydantic</code>: Data validation and settings management</li>
-            <li><code>tkinter</code>: For creating the graphical user interface</li>
-            <li><code>pyautogui</code>: For simulating keyboard input</li>
-        </ul>
-
-        <h2>main.py</h2>
-
-        <div id="main-get_local_ip" class="function-details">
-            <h3>get_local_ip()</h3>
-            <p>Retrieves the local IP address of the machine.</p>
-            <p><strong>Returns:</strong> A string representing the local IP address, or an exception if an error occurs.
-            </p>
-        </div>
-
-        <div id="main-start_server" class="function-details">
-            <h3>start_server()</h3>
-            <p>Asynchronous function to start the server.</p>
-            <p>This function initializes the server, updates the UI state, and logs relevant information.</p>
-        </div>
-
-        <div id="main-stop_server" class="function-details">
-            <h3>stop_server()</h3>
-            <p>Asynchronous function to stop the server.</p>
-            <p>This function stops the server, updates the UI state, and logs the server stop event.</p>
-        </div>
-
-        <div id="main-handle_start_stop" class="function-details">
-            <h3>handle_start_stop(start: bool)</h3>
-            <p>Handles the start/stop functionality of the server.</p>
-            <p><strong>Parameters:</strong></p>
-            <ul>
-                <li><code>start</code>: Boolean indicating whether to start (True) or stop (False) the server.</li>
-            </ul>
-        </div>
-
-        <div id="main-run_asyncio_loop" class="function-details">
-            <h3>run_asyncio_loop()</h3>
-            <p>Runs the asyncio event loop.</p>
-        </div>
-
-        <div id="main-shutdown" class="function-details">
-            <h3>shutdown(loop)</h3>
-            <p>Handles the shutdown process of the application.</p>
-            <p><strong>Parameters:</strong></p>
-            <ul>
-                <li><code>loop</code>: The asyncio event loop to be shut down.</li>
-            </ul>
-        </div>
-
-        <div id="main-on_closing" class="function-details">
-            <h3>on_closing(loop)</h3>
-            <p>Handles the closing event of the application window.</p>
-            <p><strong>Parameters:</strong></p>
-            <ul>
-                <li><code>loop</code>: The asyncio event loop to be shut down.</li>
-            </ul>
-        </div>
-
-        <div id="main-log" class="function-details">
-            <h3>log(message: str, error: bool = False)</h3>
-            <p>Logs a message to the UI.</p>
-            <p><strong>Parameters:</strong></p>
-            <ul>
-                <li><code>message</code>: The message to be logged.</li>
-                <li><code>error</code>: Boolean indicating if the message is an error (default: False).</li>
-            </ul>
-        </div>
-
-        <div id="main-set_server_state" class="function-details">
-            <h3>set_server_state(state: str)</h3>
-            <p>Updates the server state in the UI.</p>
-            <p><strong>Parameters:</strong></p>
-            <ul>
-                <li><code>state</code>: The new state of the server.</li>
-            </ul>
-        </div>
-
-        <div id="main-main" class="function-details">
-            <h3>main()</h3>
-            <p>The main function that sets up and runs the application.</p>
-        </div>
-
-        <h2>server_api.py</h2>
-
-        <div id="server-ServerThread" class="function-details">
-            <h3>ServerThread</h3>
-            <p>A class that manages the server thread.</p>
-            <p><strong>Methods:</strong></p>
-            <ul>
-                <li><code>__init__(self, app)</code>: Initializes the ServerThread.</li>
-                <li><code>run(self)</code>: Runs the server.</li>
-                <li><code>start(self)</code>: Starts the server thread.</li>
-                <li><code>stop(self)</code>: Stops the server thread.</li>
-            </ul>
-        </div>
-
-        <div id="server-EventRequest" class="function-details">
-            <h3>EventRequest</h3>
-            <p>A Pydantic model for event requests.</p>
-            <p><strong>Attributes:</strong></p>
-            <ul>
-                <li><code>text</code>: The text to be written.</li>
-                <li><code>min_delay</code>: Minimum delay between keystrokes.</li>
-                <li><code>max_delay</code>: Maximum delay between keystrokes.</li>
-            </ul>
-        </div>
-
-        <div id="server-BaseServer" class="function-details">
-            <h3>BaseServer</h3>
-            <p>Base class for the server implementation.</p>
-            <p><strong>Methods:</strong></p>
-            <ul>
-                <li><code>__init__(self, title: str, log_box_signal: Signals)</code>: Initializes the BaseServer.</li>
-                <li><code>get_app(self)</code>: Returns the FastAPI application.</li>
-                <li><code>_setup_routes(self)</code>: Sets up the server routes.</li>
-                <li><code>log(self, message: str, error: bool = False)</code>: Logs a message.</li>
-            </ul>
-        </div>
-
-        <div id="server-EventsApi" class="function-details">
-            <h3>EventsApi</h3>
-            <p>Implements the API endpoints for events.</p>
-            <p><strong>Endpoints:</strong></p>
-            <ul>
-                <li><code>POST /execute/write</code>: Handles write requests.</li>
-                <li><code>POST /execute/pause</code>: Pauses the current writing process.</li>
-                <li><code>POST /execute/resume</code>: Resumes the paused writing process.</li>
-                <li><code>POST /execute/stop</code>: Stops the current writing process.</li>
-            </ul>
-        </div>
-
-        <div id="server-Server" class="function-details">
-            <h3>Server</h3>
-            <p>Main server class that combines all server functionalities.</p>
-            <p><strong>Additional Endpoints:</strong></p>
-            <ul>
-                <li><code>GET /</code>: Serves the home page.</li>
-                <li><code>GET /health/connection</code>: Health check endpoint.</li>
-            </ul>
-        </div>
-
-        <h2>signals.py</h2>
-
-        <div id="signals-Signals" class="function-details">
-            <h3>Signals</h3>
-            <p>A class for implementing a simple signaling system.</p>
-            <p><strong>Methods:</strong></p>
-            <ul>
-                <li><code>__init__(self, *types: Any)</code>: Initializes the Signals object.</li>
-                <li><code>connect(self, func: Callable[..., None])</code>: Connects a function to the signal.</li>
-                <li><code>emit(self, *args: Any)</code>: Emits the signal with given arguments.</li>
-            </ul>
-        </div>
-
-        <h2>user_interface.py</h2>
-
-        <div id="ui-UserInterface" class="function-details">
-            <h3>UserInterface</h3>
-            <p>Implements the graphical user interface using Tkinter.</p>
-            <p><strong>Methods:</strong></p>
-            <ul>
-                <li><code>__init__(self)</code>: Initializes the UserInterface.</li>
-                <li><code>_set_style(self)</code>: Sets the style for UI elements.</li>
-                <li><code>_set_server_state(self, state: str)</code>: Updates the server state in the UI.</li>
-                <li><code>_on_start_stop_clicked(self)</code>: Handles the start/stop button click.</li>
-                <li><code>_on_log_add(self, log: str)</code>: Adds a log message to the UI.</li>
-            </ul>
-        </div>
-
-        <h2>writer.py</h2>
-
-        <div id="writer-Writer" class="function-details">
-            <h3>Writer</h3>
-            <p>Implements the core writing functionality.</p>
-            <p><strong>Methods:</strong></p>
-            <ul>
-                <li><code>__init__(self, text, min_delay, max_delay)</code>: Initializes the Writer.</li>
-                <li><code>pause(self)</code>: Pauses the writing process.</li>
-                <li><code>resume(self)</code>: Resumes the writing process.</li>
-                <li><code>stop(self)</code>: Stops the writing process.</li>
-                <li><code>__writer(self)</code>: Internal method that performs the writing.</li>
-                <li><code>run(self)</code>: Runs the writing process.</li>
-                <li><code>create_and_start_process(text: str, min_delay: float, max_delay: float)</code>: Static method
-                    to create and start a Writer process.</li>
-            </ul>
-        </div>
-
-        <a href="/docs" class="api-test-button">Test API</a>
-    </div>
-
-    <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Highlight current section in sidebar
-        window.addEventListener('scroll', function () {
-            let current = '';
-            document.querySelectorAll('.function-details').forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 60) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            document.querySelectorAll('.function-list a').forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('href').substring(1) === current) {
-                    a.classList.add('active');
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

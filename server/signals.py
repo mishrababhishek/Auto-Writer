@@ -1,5 +1,5 @@
 from typing import Callable, List, Any, Tuple
-
+import asyncio
 
 class Signals:
     def __init__(self, *types: Any) -> None:
@@ -21,4 +21,7 @@ class Signals:
                 raise TypeError(f"Argument {arg} is not of type {expected_type}")
 
         for func in self._connections:
-            func(*args)
+            if asyncio.iscoroutinefunction(func):
+                asyncio.create_task(func(*args))
+            else:
+                func(*args)
